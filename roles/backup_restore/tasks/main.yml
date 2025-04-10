@@ -1,12 +1,21 @@
 ---
-- name: Sauvegarder /etc
+- name: Créer le dossier /save
+  file:
+    path: /save
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+
+- name: Sauvegarder /etc dans /save
   archive:
     path: /etc
-    dest: /tmp/etc_backup.tar.gz
+    dest: /save/etc_backup.tar.gz
     format: gz
+  register: backup_result
 
 - name: Restaurer /etc depuis la sauvegarde (exemple)
   unarchive:
-    src: /tmp/etc_backup.tar.gz
+    src: /save/etc_backup.tar.gz
     dest: /
     remote_src: yes
