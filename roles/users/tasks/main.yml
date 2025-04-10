@@ -1,0 +1,7 @@
+---
+- name: Créer un utilisateur
+  user:
+    name: "toto"
+    password: "{{ 'MotDePasse123' | password_hash('sha512') }}"
+    shell: /bin/bash
+    state: present

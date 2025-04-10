@@ -1,0 +1,7 @@
+---
+- hosts: serveurs
+  become: true
+  roles:
+    - users
+    - backup_restore
+    - database

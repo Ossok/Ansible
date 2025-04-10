@@ -1,0 +1,12 @@
+---
+- name: Sauvegarder /etc
+  archive:
+    path: /etc
+    dest: /tmp/etc_backup.tar.gz
+    format: gz
+
+- name: Restaurer /etc depuis la sauvegarde (exemple)
+  unarchive:
+    src: /tmp/etc_backup.tar.gz
+    dest: /
+    remote_src: yes

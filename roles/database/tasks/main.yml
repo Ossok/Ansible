@@ -1,0 +1,43 @@
+---
+- name: Installer les paquets requis
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - mariadb-server
+    - python3-pymysql
+
+- name: S'assurer que MariaDB est démarré
+  systemd:
+    name: mariadb
+    state: started
+    enabled: yes
+
+- name: Créer un utilisateur MySQL pour Ansible
+  community.mysql.mysql_user:
+    name: ansible_admin
+    password: AnsibleSecurePass123
+    priv: '*.*:ALL,GRANT'
+    state: present
+    login_user: root
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+  no_log: true  # Masquer les informations sensibles dans les logs
+
+- name: Créer une base de données
+  community.mysql.mysql_db:
+    name: mydb
+    state: present
+    login_user: ansible_admin
+    login_password: AnsibleSecurePass123
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+
+- name: Créer un utilisateur MySQL
+  community.mysql.mysql_user:
+    name: dbuser
+    password: dbpassword
+    priv: 'mydb.*:ALL'
+    state: present
+    login_user: ansible_admin
+    login_password: AnsibleSecurePass123
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+  no_log: true  # Masquer les informations sensibles dans les logs
